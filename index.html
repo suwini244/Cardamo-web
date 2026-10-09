@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cardamo Research Project</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3c6.5 4.6 9.2 10 8 16-1 5-4.4 8.2-8 10-3.6-1.8-7-5-8-10-1.2-6 1.5-11.4 8-16z' fill='%235e9634'/%3E%3C/svg%3E">
+<meta name="description" content="Cardamo: an ML-driven smart cardamom cultivation management system. SLIIT research project R26-IT-032.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one long field-notebook page. Deep pod-green hero taken from the Cardamo app, then paper sections;
+   each research component is a "specimen sheet" with a mono label strip, method on the left, evidence on the right. */
+:root {
+  --paper: #f4f7f1;
+  --surface: #ffffff;
+  --tint: #e6eee0;
+  --ink: #13261c;
+  --ink-2: #4a5c51;
+  --line: #d3ddd0;
+  --forest: #0e4a36;
+  --forest-deep: #0a3828;
+  --on-forest: #eef5ef;
+  --on-forest-2: #b9d1c2;
+  --accent: #0d5c40;
+  --pod: #5e9634;
+  --husk: #8a6a1f;
+  --on-husk: #ffffff;
+  --husk-tint: #f3ead2;
+  --shadow: 0 18px 40px -22px rgba(10, 40, 28, .45);
+
+  --font-display: "Young Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: "Hanken Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --fs-label: .78rem;
+  --fs-small: .9rem;
+  --fs-body: 1.0625rem;
+  --fs-lead: 1.2rem;
+  --fs-h3: 1.45rem;
+  --fs-h2: clamp(2.1rem, 4.2vw, 3rem);
+  --fs-hero: clamp(3.6rem, 11vw, 7.8rem);
+
+  --wrap: 1180px;
+  --gutter: 20px;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0d1712;
+    --surface: #13211a;
+    --tint: #1a2d23;
+    --ink: #e4eee7;
+    --ink-2: #a2b4a8;
+    --line: #283d32;
+    --forest: #103a2b;
+    --forest-deep: #0b2b20;
+    --on-forest: #eaf3ec;
+    --on-forest-2: #a9c5b4;
+    --accent: #8bd3aa;
+    --pod: #8cc35a;
+    --husk: #d6b76a;
+    --on-husk: #1d1708;
+    --husk-tint: #2f2a18;
+    --shadow: 0 18px 40px -22px rgba(0, 0, 0, .8);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0d1712;
+  --surface: #13211a;
+  --tint: #1a2d23;
+  --ink: #e4eee7;
+  --ink-2: #a2b4a8;
+  --line: #283d32;
+  --forest: #103a2b;
+  --forest-deep: #0b2b20;
+  --on-forest: #eaf3ec;
+  --on-forest-2: #a9c5b4;
+  --accent: #8bd3aa;
+  --pod: #8cc35a;
+  --husk: #d6b76a;
+  --on-husk: #1d1708;
+  --husk-tint: #2f2a18;
+  --shadow: 0 18px 40px -22px rgba(0, 0, 0, .8);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+@media (max-width: 760px) { html { scroll-padding-top: 108px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--husk); outline-offset: 3px; border-radius: 4px;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.12; text-wrap: balance; margin: 0; }
+h2 { font-size: var(--fs-h2); letter-spacing: -.01em; }
+h3 { font-size: var(--fs-h3); }
+p { margin: 0; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+.label {
+  font-family: var(--font-mono); font-size: var(--fs-label); font-weight: 500;
+  text-transform: uppercase; letter-spacing: .09em; color: var(--ink-2);
+}
+.mono { font-family: var(--font-mono); }
+.num { font-variant-numeric: tabular-nums; }
+.measure { max-width: 66ch; }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--forest-deep) 94%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  color: var(--on-forest);
+  border-bottom: 1px solid color-mix(in srgb, var(--on-forest) 12%, transparent);
+}
+.nav .wrap { display: flex; align-items: center; gap: 24px; min-height: 62px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--on-forest); text-decoration: none; flex: none; }
+.brand svg { width: 26px; height: 26px; }
+.brand b { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; letter-spacing: .01em; }
+.nav-links { display: flex; gap: 4px; margin-left: auto; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-links a {
+  color: var(--on-forest-2); text-decoration: none; font-size: .95rem; font-weight: 500;
+  padding: 8px 12px; border-radius: 999px; white-space: nowrap;
+}
+.nav-links a:hover { color: var(--on-forest); background: color-mix(in srgb, var(--on-forest) 10%, transparent); }
+.nav-links a.is-active { color: var(--forest-deep); background: var(--on-forest); }
+@media (max-width: 760px) {
+  .nav .wrap { flex-wrap: wrap; gap: 0; padding-block: 8px 4px; }
+  .nav-links { margin-left: 0; width: 100%; padding-bottom: 4px; }
+  .nav-links a { padding: 6px 10px; font-size: .9rem; }
+}
+
+/* ---------- Hero ---------- */
+.hero { background: var(--forest); color: var(--on-forest); overflow: hidden; position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(60% 80% at 85% 10%, color-mix(in srgb, var(--pod) 30%, transparent), transparent 70%),
+    radial-gradient(50% 60% at 0% 100%, color-mix(in srgb, var(--forest-deep) 90%, transparent), transparent 70%);
+}
+.hero .wrap {
+  position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(32px, 5vw, 72px); align-items: center; padding-block: clamp(48px, 7vw, 96px);
+}
+.hero-text { display: grid; gap: 22px; min-width: 0; }
+.hero .label { color: var(--on-forest-2); }
+.hero h1 { font-size: var(--fs-hero); line-height: .92; letter-spacing: -.02em; }
+.hero .species { font-family: var(--font-display); font-style: italic; color: var(--on-forest-2); font-size: 1.05rem; }
+.hero .species span { font-family: var(--font-mono); font-style: normal; font-size: var(--fs-label); letter-spacing: .06em; margin-left: 8px; opacity: .8; }
+.hero .lead { font-size: var(--fs-lead); color: var(--on-forest); max-width: 40ch; line-height: 1.5; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 600;
+  padding: 12px 20px; border-radius: 999px; font-size: 1rem; border: 1px solid transparent; cursor: pointer;
+  font-family: var(--font-body);
+}
+.btn-light { background: var(--on-forest); color: var(--forest-deep); }
+.btn-light:hover { background: #ffffff; }
+.btn-ghost { color: var(--on-forest); border-color: color-mix(in srgb, var(--on-forest) 40%, transparent); }
+.btn-ghost:hover { background: color-mix(in srgb, var(--on-forest) 10%, transparent); }
+.tags { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 6px 0 0; list-style: none; }
+.tags a {
+  display: inline-flex; align-items: center; gap: 8px; color: var(--on-forest); text-decoration: none;
+  font-size: .92rem; padding: 7px 12px 7px 10px; border-radius: 8px;
+  background: color-mix(in srgb, var(--forest-deep) 70%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--on-forest) 30%, transparent);
+}
+.tags a:hover { border-style: solid; }
+.tags a::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--pod); flex: none; }
+
+.hero-visual { position: relative; min-width: 0; padding-bottom: 28px; }
+.hero-photo {
+  aspect-ratio: 4 / 5; width: 86%; margin-left: auto; border-radius: 22px; overflow: hidden;
+  box-shadow: var(--shadow); max-width: 100%;
+}
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+.hero-phone {
+  position: absolute; left: 0; bottom: 0; width: 42%; border-radius: 22px; overflow: hidden;
+  border: 6px solid var(--forest-deep); box-shadow: var(--shadow); background: var(--forest-deep);
+}
+.hero-phone img { width: 100%; aspect-ratio: 520 / 860; object-fit: cover; object-position: top; }
+.hero-caption { position: absolute; right: 0; bottom: 0; font-family: var(--font-mono); font-size: .72rem; color: var(--on-forest-2); letter-spacing: .04em; }
+@media (max-width: 880px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); }
+  .hero-visual { max-width: 460px; }
+}
+
+/* ---------- Stats ---------- */
+.stats { border-bottom: 1px solid var(--line); background: var(--surface); }
+.stats .wrap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.stat { padding: 26px 20px 24px; display: grid; gap: 4px; border-left: 1px solid var(--line); }
+.stat:first-child { border-left: 0; padding-left: 0; }
+.stat b { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 3.4vw, 2.6rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.stat span { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.4; }
+@media (max-width: 760px) {
+  .stats .wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat { padding: 20px 14px; }
+  .stat:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+
+/* ---------- Sections ---------- */
+.section { padding-block: clamp(64px, 9vw, 112px); }
+.section + .section { border-top: 1px solid var(--line); }
+.section-head { display: grid; gap: 14px; margin-bottom: clamp(32px, 5vw, 52px); }
+.section-head p:not(.label) { color: var(--ink-2); font-size: var(--fs-lead); max-width: 62ch; line-height: 1.55; }
+.sub { margin-top: clamp(48px, 7vw, 80px); }
+.sub-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.sub-head h3 { font-size: clamp(1.5rem, 2.6vw, 1.9rem); }
+
+/* Literature */
+.lit { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--ink); }
+.lit article { padding: 20px 22px 8px 0; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.lit article + article { padding-left: 22px; border-left: 1px solid var(--line); }
+.lit h4 { margin: 0; font-size: 1.08rem; font-weight: 700; }
+.lit ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.lit li { font-size: .97rem; color: var(--ink-2); line-height: 1.5; padding-left: 14px; position: relative; }
+.lit li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--pod); }
+.cite { font-family: var(--font-mono); font-size: .8em; color: var(--accent); white-space: nowrap; }
+@media (max-width: 980px) {
+  .lit { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lit article:nth-child(3) { padding-left: 0; border-left: 0; }
+  .lit article:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+@media (max-width: 600px) {
+  .lit { grid-template-columns: minmax(0, 1fr); }
+  .lit article, .lit article + article { padding-left: 0; border-left: 0; }
+  .lit article + article { border-top: 1px solid var(--line); }
+}
+details.refs { margin-top: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+details.refs summary { cursor: pointer; padding: 14px 18px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+details.refs summary::-webkit-details-marker { display: none; }
+details.refs summary::after { content: "+"; font-family: var(--font-mono); color: var(--ink-2); }
+details.refs[open] summary::after { content: "–"; }
+details.refs ol { margin: 0; padding: 4px 22px 20px 52px; display: grid; gap: 8px; font-size: .93rem; color: var(--ink-2); }
+details.refs li::marker { font-family: var(--font-mono); color: var(--accent); font-size: .85em; }
+
+/* Gap */
+.gap-table { display: grid; border-top: 2px solid var(--ink); }
+.gap-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1.3fr); gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.gap-row.head { padding: 10px 0; }
+.gap-row h4 { margin: 0; font-size: 1.05rem; font-weight: 700; }
+.gap-row p { color: var(--ink-2); font-size: .98rem; line-height: 1.5; }
+.gap-row p.answer { color: var(--ink); }
+@media (max-width: 760px) {
+  .gap-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .gap-row.head { display: none; }
+  .gap-row p.answer::before { content: "Cardamo: "; font-weight: 700; color: var(--accent); }
+}
+
+/* Problem */
+.problem {
+  background: var(--forest); color: var(--on-forest); border-radius: 22px;
+  padding: clamp(24px, 4vw, 48px); display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 48px); align-items: center;
+}
+.problem-text { display: grid; gap: 18px; min-width: 0; }
+.problem figure img { border: 0; border-radius: 14px; aspect-ratio: 4 / 5; object-fit: cover; }
+.problem figcaption { color: var(--on-forest-2); }
+@media (max-width: 760px) {
+  .problem { grid-template-columns: minmax(0, 1fr); }
+  .problem figure img { aspect-ratio: 16 / 10; }
+}
+.problem .label { color: var(--on-forest-2); }
+.problem blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(1.45rem, 3vw, 2.2rem); line-height: 1.25; max-width: 32ch; text-wrap: balance; }
+.problem p { color: var(--on-forest-2); max-width: 70ch; }
+
+/* Objectives */
+.objective-main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+.objective-main p:not(.label) { font-size: var(--fs-lead); line-height: 1.55; }
+.objectives { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 32px; }
+.obj {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px; display: flex; flex-direction: column; gap: 12px; text-decoration: none; color: inherit; min-width: 0;
+}
+.obj:hover { border-color: var(--pod); }
+.obj h4 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; line-height: 1.2; }
+.obj p { color: var(--ink-2); font-size: .97rem; line-height: 1.5; }
+.obj .who { font-size: .88rem; color: var(--ink); font-weight: 600; margin-top: auto; }
+@media (max-width: 980px) { .objectives { grid-template-columns: repeat(2, minmax(0, 1fr)); } .objective-main { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
+@media (max-width: 560px) { .objectives { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Architecture ---------- */
+.arch-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: clamp(18px, 3vw, 32px); }
+.arch {
+  display: grid; align-items: center;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, .95fr) 28px minmax(0, 1.15fr) 28px minmax(0, 1.1fr);
+  grid-template-rows: auto repeat(4, auto); row-gap: 12px;
+}
+.arch .colhead { grid-row: 1; padding-bottom: 6px; }
+.arch .node {
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--paper);
+  font-size: .9rem; line-height: 1.35; min-width: 0;
+}
+.arch .node b { display: block; font-weight: 700; font-size: .95rem; }
+.arch .node small { color: var(--ink-2); font-size: .82rem; }
+.arch .node.model { background: var(--tint); border-color: color-mix(in srgb, var(--pod) 45%, var(--line)); }
+.arch .node.model .mono { font-size: .78rem; color: var(--accent); }
+.arch .node.out { border-style: dashed; background: transparent; }
+.arch .hub {
+  grid-column: 3; grid-row: 2 / span 4; align-self: stretch;
+  background: var(--forest); color: var(--on-forest); border-radius: 14px; padding: 18px 16px;
+  display: grid; align-content: center; gap: 12px;
+}
+.arch .hub b { font-family: var(--font-display); font-weight: 400; font-size: 1.25rem; }
+.arch .hub ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: .88rem; color: var(--on-forest-2); }
+.arch .hub li { padding-left: 14px; position: relative; }
+.arch .hub li::before { content: ""; position: absolute; left: 0; top: .55em; width: 6px; height: 6px; border-radius: 50%; background: var(--pod); }
+.arch .arrow { color: var(--ink-2); text-align: center; font-family: var(--font-mono); }
+@media (max-width: 860px) {
+  .arch { grid-template-columns: minmax(0, 1fr); row-gap: 8px; }
+  .arch .colhead, .arch .arrow { display: none; }
+  .arch .hub { grid-column: 1; grid-row: auto; margin-bottom: 16px; }
+  .arch > .node { grid-column: 1 !important; grid-row: auto !important; }
+  .arch .node.in { margin-top: 14px; border-top: 3px solid var(--pod); }
+}
+.arch-note { margin-top: 14px; font-size: .85rem; color: var(--ink-2); }
+
+/* ---------- Specimen sheets ---------- */
+.sheets { display: grid; gap: clamp(32px, 5vw, 56px); margin-top: clamp(48px, 7vw, 80px); }
+.sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; }
+.sheet-strip {
+  display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; justify-content: space-between;
+  padding: 12px clamp(18px, 3vw, 32px); background: var(--tint); border-bottom: 1px solid var(--line);
+}
+.sheet-strip .label { color: var(--accent); }
+.sheet-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); padding: clamp(20px, 4vw, 40px); }
+.sheet-head { display: grid; gap: 10px; margin-bottom: 22px; }
+.sheet-head h3 { font-size: clamp(1.7rem, 3vw, 2.3rem); }
+.sheet-head .rq { color: var(--ink-2); font-size: 1.02rem; line-height: 1.5; }
+.owner { display: flex; align-items: center; gap: 10px; font-size: .95rem; }
+.owner .avatar { width: 32px; height: 32px; font-size: .78rem; margin-bottom: 0; }
+.steps { margin: 0 0 24px; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 12px; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; font-size: .97rem; line-height: 1.5; }
+.steps li::before {
+  content: counter(s); font-family: var(--font-mono); font-size: .78rem; font-weight: 500;
+  width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid var(--line); color: var(--accent); margin-top: 1px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; padding: 0; list-style: none; }
+.chips li { font-family: var(--font-mono); font-size: .8rem; padding: 4px 9px; border-radius: 6px; background: var(--tint); color: var(--ink); }
+
+.split-block { display: grid; gap: 8px; }
+.split { display: flex; height: 14px; border-radius: 4px; overflow: hidden; gap: 2px; }
+.split span { display: block; min-width: 0; }
+.split .tr { background: var(--pod); }
+.split .va { background: color-mix(in srgb, var(--pod) 55%, var(--surface)); }
+.split .te { background: var(--husk); }
+.split-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: .84rem; color: var(--ink-2); }
+.split-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+.evidence { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-content: start; min-width: 0; }
+.evidence > *, .sheet-body > * { min-width: 0; }
+.headline { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.headline b { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.6rem, 5vw, 3.6rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.headline span { color: var(--ink-2); font-size: .95rem; max-width: 26ch; line-height: 1.4; }
+
+.metrics { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.metrics th { text-align: left; font-family: var(--font-mono); font-weight: 500; font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); padding: 0 8px 8px 0; border-bottom: 1px solid var(--line); }
+.metrics td { padding: 9px 8px 9px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; vertical-align: middle; }
+.metrics td:first-child { font-family: var(--font-mono); font-size: .82rem; white-space: nowrap; }
+.metrics .barcell { width: 38%; }
+.bar { height: 8px; border-radius: 4px; background: var(--tint); position: relative; overflow: hidden; }
+.bar i { position: absolute; inset: 0 auto 0 0; background: var(--pod); border-radius: 4px; }
+.table-scroll { overflow-x: auto; position: relative; }
+@media (max-width: 520px) { .metrics .barcell { display: none; } }
+
+.shots { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.shots.wide { grid-template-columns: minmax(0, 1fr); }
+figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+figure img { border-radius: 12px; border: 1px solid var(--line); width: 100%; height: auto; background: var(--paper); }
+figure.crop img { aspect-ratio: 520 / 820; object-fit: cover; }
+figure.phone img { aspect-ratio: 520 / 820; object-fit: cover; object-position: top; }
+figcaption { font-size: .82rem; color: var(--ink-2); line-height: 1.4; }
+
+.cm { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 4px; font-size: .85rem; max-width: 380px; }
+.cm div { padding: 10px; border-radius: 6px; text-align: center; font-variant-numeric: tabular-nums; }
+.cm .h { font-family: var(--font-mono); font-size: .74rem; color: var(--ink-2); padding: 6px; display: flex; align-items: center; justify-content: center; text-align: center; }
+.cm .h.row { justify-content: flex-start; text-align: left; }
+.cm .hit { background: var(--accent); color: var(--paper); font-weight: 700; font-size: 1.05rem; }
+.cm .miss { background: var(--tint); color: var(--ink); }
+
+pre.json {
+  margin: 0; background: var(--forest-deep); color: var(--on-forest); border-radius: 12px; padding: 16px;
+  font-family: var(--font-mono); font-size: .78rem; line-height: 1.55; overflow-x: auto; white-space: pre;
+}
+pre.json .k { color: #9fd7b5; }
+pre.json .s { color: #f0d79a; }
+
+.grades { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.grades div { display: grid; grid-template-columns: 74px 70px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: .9rem; align-items: baseline; }
+.grades b { font-weight: 700; }
+.grades .code { font-family: var(--font-mono); font-size: .82rem; color: var(--accent); }
+.grades span:last-child { color: var(--ink-2); }
+
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.tile { border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 2px; background: var(--paper); }
+.tile b { font-family: var(--font-display); font-weight: 400; font-size: 1.45rem; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.tile span { font-size: .78rem; color: var(--ink-2); }
+@media (max-width: 520px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.hbars { display: grid; gap: 7px; font-size: .84rem; }
+.hbars div { display: grid; grid-template-columns: 150px minmax(0, 1fr) 52px; gap: 10px; align-items: center; }
+.hbars em { font-style: normal; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hbars .bar { height: 10px; }
+.hbars .bar i { background: color-mix(in srgb, var(--ink-2) 45%, var(--tint)); }
+.hbars .best em { color: var(--ink); font-weight: 600; }
+.hbars .best .bar i { background: var(--pod); }
+.hbars span { font-family: var(--font-mono); font-size: .8rem; text-align: right; }
+.hbars .axis { grid-template-columns: 150px minmax(0, 1fr) 52px; color: var(--ink-2); font-family: var(--font-mono); font-size: .72rem; }
+.hbars .axis p { position: relative; height: 1.2em; }
+.hbars .axis p span { position: absolute; top: 0; text-align: left; }
+.hbars .axis p span:nth-child(2) { left: 50%; transform: translateX(-50%); }
+.hbars .axis p span:nth-child(3) { right: 0; }
+@media (max-width: 480px) { .hbars div, .hbars .axis { grid-template-columns: 112px minmax(0, 1fr) 46px; } }
+
+.rule { border-left: 3px solid var(--husk); padding: 4px 0 4px 14px; font-size: .93rem; color: var(--ink-2); display: grid; gap: 6px; }
+.rule .rule-label { color: var(--husk); }
+.rule code { font-family: var(--font-mono); font-size: .82rem; color: var(--ink); background: var(--husk-tint); padding: 1px 6px; border-radius: 4px; }
+
+@media (max-width: 900px) { .sheet-body { grid-template-columns: minmax(0, 1fr); } }
+
+.endorse {
+  margin-top: clamp(32px, 5vw, 56px); display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 18px;
+  padding: clamp(20px, 3vw, 28px); border-radius: 18px; background: var(--husk-tint); border: 1px solid color-mix(in srgb, var(--husk) 40%, transparent);
+}
+.endorse svg { width: 44px; height: 44px; color: var(--husk); }
+.endorse p { max-width: 75ch; }
+.endorse .label { color: var(--husk); margin-bottom: 4px; }
+
+/* Tech matrix */
+.tech-scroll { position: relative; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.tech { width: 100%; border-collapse: collapse; min-width: 640px; font-size: .94rem; }
+.tech th, .tech td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.tech tr:last-child td { border-bottom: 0; }
+.tech thead th { font-family: var(--font-mono); font-weight: 500; font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); background: var(--tint); }
+.tech thead th.c, .tech td.c { text-align: center; width: 76px; }
+.tech td:first-child { font-weight: 700; white-space: nowrap; }
+.tech td.role { color: var(--ink-2); min-width: 240px; }
+.dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: var(--pod); }
+.dot.no { background: transparent; border: 1px solid var(--line); }
+
+/* ---------- Timeline ---------- */
+.timeline { list-style: none; margin: 0; padding: 0; position: relative; display: grid; max-width: 860px; }
+.timeline::before { content: ""; position: absolute; left: 167px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+.tl { display: grid; grid-template-columns: 150px 36px minmax(0, 1fr) auto; gap: 0 0; align-items: start; padding: 14px 0; }
+.tl time { font-family: var(--font-mono); font-size: .84rem; color: var(--ink-2); padding-top: 2px; text-align: right; padding-right: 4px; }
+.tl .mark { justify-self: center; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); border: 2px solid var(--line); margin-top: 4px; position: relative; z-index: 1; }
+.tl h4 { margin: 0; font-size: 1.05rem; font-weight: 600; }
+.tl p { font-size: .9rem; color: var(--ink-2); }
+.tl .state { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-2); white-space: nowrap; margin-left: 12px; }
+.tl.done .mark { background: var(--pod); border-color: var(--pod); }
+.tl.done .mark::after { content: ""; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px; border: solid var(--paper); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.tl.done .state { color: var(--accent); border-color: color-mix(in srgb, var(--pod) 50%, var(--line)); }
+.tl.next .mark { border-color: var(--husk); background: var(--husk); box-shadow: 0 0 0 5px color-mix(in srgb, var(--husk) 25%, transparent); }
+.tl.next .state { background: var(--husk); border-color: var(--husk); color: var(--on-husk); font-weight: 500; }
+.tl.next h4 { font-weight: 700; }
+.tl.now .state { background: var(--forest); color: var(--on-forest); border-color: var(--forest); }
+@media (max-width: 640px) {
+  .timeline::before { left: 7px; }
+  .tl { grid-template-columns: 16px minmax(0, 1fr); column-gap: 14px; }
+  .tl .mark { grid-column: 1; grid-row: 1 / span 3; margin-top: 3px; }
+  .tl time { grid-column: 2; text-align: left; padding: 0; }
+  .tl > div { grid-column: 2; }
+  .tl .state { grid-column: 2; justify-self: start; margin: 6px 0 0; }
+}
+.tl-note { margin-top: 18px; font-size: .88rem; color: var(--ink-2); }
+
+/* ---------- Documents ---------- */
+.docs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.doc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.doc .top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.doc .kind { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.doc time { font-family: var(--font-mono); font-size: .74rem; color: var(--ink-2); }
+.doc h4 { margin: 0; font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
+.doc .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.doc .links a { font-size: .88rem; font-weight: 600; text-decoration: none; padding: 6px 12px; border-radius: 999px; background: var(--forest); color: var(--on-forest); }
+.doc .links a:hover { background: var(--accent); color: var(--paper); }
+.doc .pending { font-family: var(--font-mono); font-size: .76rem; color: var(--ink-2); }
+@media (max-width: 980px) { .docs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .docs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 440px) { .docs { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Team ---------- */
+.team-group + .team-group { margin-top: 40px; }
+.team-group > .label { display: block; margin-bottom: 14px; }
+.people { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.people.sup { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.people.sup .person { grid-template-columns: 72px minmax(0, 1fr); column-gap: 18px; align-items: center; }
+.people.sup .person > * { grid-column: 2; }
+.people.sup .person > .avatar { grid-column: 1; grid-row: 1 / span 4; margin-bottom: 0; }
+.person { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.avatar {
+  width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; overflow: hidden;
+  background: var(--forest); color: var(--on-forest); font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 12px; flex: none;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.person .role { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.person h4 { margin: 0; font-size: 1.1rem; font-weight: 700; }
+.person p { font-size: .9rem; color: var(--ink-2); line-height: 1.45; }
+.person a.li { font-size: .88rem; font-weight: 600; margin-top: 6px; justify-self: start; }
+@media (max-width: 980px) { .people { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .people { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Contact ---------- */
+.contact { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); }
+form { display: grid; gap: 16px; }
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 600; font-size: .95rem; }
+.field input, .field textarea {
+  font: inherit; font-size: 1rem; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); width: 100%;
+}
+.field textarea { min-height: 140px; resize: vertical; }
+.btn-dark { background: var(--forest); color: var(--on-forest); justify-self: start; }
+.btn-dark:hover { background: var(--accent); color: var(--paper); }
+.form-status { font-size: .92rem; color: var(--ink-2); min-height: 1.4em; }
+.contact-card { align-self: start; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: grid; gap: 18px; align-content: start; }
+.contact-card dl { margin: 0; display: grid; gap: 14px; }
+.contact-card dt { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.contact-card dd { margin: 2px 0 0; font-size: 1rem; overflow-wrap: anywhere; }
+.copy { font: inherit; font-size: .8rem; font-weight: 600; margin-left: 8px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--accent); cursor: pointer; }
+@media (max-width: 820px) { .contact { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Footer ---------- */
+footer { background: var(--forest-deep); color: var(--on-forest-2); }
+footer .wrap { padding-block: 40px; display: flex; flex-wrap: wrap; gap: 20px 40px; justify-content: space-between; align-items: center; font-size: .9rem; }
+footer .brand b { color: var(--on-forest); }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="Cardamo home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3c6.5 4.6 9.2 10 8 16-1 5-4.4 8.2-8 10-3.6-1.8-7-5-8-10-1.2-6 1.5-11.4 8-16z" fill="#8cc35a"/><path d="M16 6.5v20" stroke="#0a3828" stroke-width="1.6" stroke-linecap="round"/><path d="M16 12l-4-2.6M16 17l-4.6-2.8M16 12l4-2.6M16 17l4.6-2.8" stroke="#0a3828" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <b>Cardamo</b>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="#home">Home</a>
+      <a href="#research">Research</a>
+      <a href="#solution">Solution</a>
+      <a href="#milestones">Milestones</a>
+      <a href="#documents">Documents</a>
+      <a href="#team">Team</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <div class="wrap">
+    <div class="hero-text">
+      <p class="label">SLIIT research project · Group R26-IT-032 · 2026</p>
+      <h1>Cardamo</h1>
+      <p class="species">Elettaria cardamomum <span>(L.) Maton</span></p>
+      <p class="lead">An ML-driven smart cardamom cultivation management system. Cardamo helps Sri Lankan farmers check leaf and pod health, grade harvested pods and decide when to sell, from a phone photo and a few farm details.</p>
+      <div class="hero-actions">
+        <a class="btn btn-light" href="#research">Explore the research</a>
+        <a class="btn btn-ghost" href="#solution">See the four components</a>
+      </div>
+      <ul class="tags" aria-label="Research components">
+        <li><a href="#c-leaf">Leaf disease detection</a></li>
+        <li><a href="#c-pod">Pod disease detection</a></li>
+        <li><a href="#c-grade">Pod quality grading</a></li>
+        <li><a href="#c-market">Market intelligence</a></li>
+      </ul>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-photo"><img src="assets/img/plantation.webp" alt="Cardamom plants in a plantation observed during a field visit" width="820" height="1093"></div>
+      <div class="hero-phone"><img src="assets/img/app-dashboard.webp" alt="Cardamo mobile dashboard listing the Pod Disease, Leaf Analysis, Grading and Market services" width="520" height="1127"></div>
+    </div>
+  </div>
+</header>
+
+<section class="stats" aria-label="Project at a glance">
+  <div class="wrap">
+    <div class="stat"><b>4</b><span>AI services in one web and mobile platform</span></div>
+    <div class="stat"><b>7,367</b><span>labelled cardamom leaf and pod images</span></div>
+    <div class="stat"><b>10,416</b><span>weekly market records, 2018 to 2026</span></div>
+    <div class="stat"><b>20,640</b><span>backtested sell-or-dry scenarios</span></div>
+  </div>
+</section>
+
+<main>
+<!-- ================= RESEARCH ================= -->
+<section class="section" id="research">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="label">Our research</p>
+      <h2>Four decisions a cardamom farmer makes by eye</h2>
+      <p>Cardamom is one of Sri Lanka's high-value export spices <span class="cite">[16]</span>. Its yield depends on catching leaf and pod problems early, and its price depends on visible quality and on when it is sold. Today most of these calls are made by inspection and experience. Cardamo puts machine learning behind each of them.</p>
+    </div>
+
+    <div class="sub" style="margin-top:0">
+      <div class="sub-head"><h3>Literature survey</h3><span class="label">What prior work established</span></div>
+      <div class="lit">
+        <article>
+          <h4>Leaf disease detection</h4>
+          <ul>
+            <li>CNNs can recognise plant diseases from leaf images, shown mostly on large multi-crop datasets <span class="cite">[2], [3]</span>.</li>
+            <li>Cardamom-specific studies exist <span class="cite">[5], [6]</span>, but cardamom is under-represented in public datasets and controlled-image models may not hold up on field photos.</li>
+            <li>Grad-CAM can show which region of an image drove a prediction <span class="cite">[4]</span>.</li>
+          </ul>
+        </article>
+        <article>
+          <h4>Pod disease detection</h4>
+          <ul>
+            <li>The capsule is the part that is sold, yet pod-level threats get less attention than leaf disease in the literature.</li>
+            <li>Capsule borer entry holes are small relative to the pod and thrips leave surface scarring, so field inspection depends on experience.</li>
+            <li>Detection studies usually stop at a label, with no guidance on what the farmer should do next.</li>
+          </ul>
+        </article>
+        <article>
+          <h4>Pod quality grading</h4>
+          <ul>
+            <li>Cardamom has been graded with YOLOv8 <span class="cite">[7]</span> and with classical ML on colour, size and surface features <span class="cite">[10]</span>.</li>
+            <li>Electronic-nose fusion <span class="cite">[8]</span> and image-based size measurement <span class="cite">[9]</span> perform well but need extra hardware or controlled setups.</li>
+            <li>Few of these approaches are packaged for a farmer's phone.</li>
+          </ul>
+        </article>
+        <article>
+          <h4>Market forecasting</h4>
+          <ul>
+            <li>Sri Lankan commodity prices have been forecast with time-series models <span class="cite">[12]</span> and machine learning <span class="cite">[15]</span>.</li>
+            <li>Currency movement affects export prices <span class="cite">[13]</span>, and processing costs shape spice-sector margins <span class="cite">[14]</span>.</li>
+            <li>None of these link a price forecast to the farmer's choice between selling fresh and drying for a later sale.</li>
+          </ul>
+        </article>
+      </div>
+      <details class="refs">
+        <summary>References (16)</summary>
+        <ol>
+          <li>U. Jayasinghe, “Cardamom Cultivation in Knuckles Conservation Forest,” HARTI, Colombo, Sri Lanka, 2016.</li>
+          <li>S. P. Mohanty, D. P. Hughes and M. Salathé, “Using deep learning for image-based plant disease detection,” <i>Frontiers in Plant Science</i>, vol. 7, 2016.</li>
+          <li>S. Sladojevic et al., “Deep neural networks based recognition of plant diseases by leaf image classification,” <i>Computational Intelligence and Neuroscience</i>, 2016.</li>
+          <li>R. R. Selvaraju et al., “Grad-CAM: Visual explanations from deep networks via gradient-based localization,” <i>Proc. IEEE ICCV</i>, 2017, pp. 618–626.</li>
+          <li>A. Malayil and M. A. S. Mosleh, “Detection of Diseases in Cardamom Leaves Using Digital Image Feature Selection Techniques,” <i>ICCCNT</i>, 2024.</li>
+          <li>S. C. and J. C., “Cardamom plant disease detection approach using EfficientNetV2,” <i>International Journal of Novel Research and Development</i>, vol. 6, no. 5, 2021.</li>
+          <li>M. Rafeek, S. Jayasinghe and R. Perera, “Computer Vision Technique for Quality Grading of Cardamom Spice,” <i>Proc. SCSE</i>, 2025.</li>
+          <li>E. Godini, M. H. Kaveh and S. Minaei, “Intelligent Grading of Green Cardamom Using Data Fusion of Electronic Nose and Computer Vision Methods,” <i>Food Science &amp; Nutrition</i>, vol. 13, 2025.</li>
+          <li>K. Saha, M. A. Rahman and M. S. Islam, “Estimation of Cardamom Capsule Size and Surface Area Using Digital Image Processing Technique,” <i>Journal of Bangladesh Agricultural University</i>, vol. 19, no. 3, 2021.</li>
+          <li>R. Jose and K. S. Krishnan, “Cardamom Grading — A Solution Through Machine Learning Techniques,” <i>Global Conference on Communication Technologies</i>, 2015.</li>
+          <li>M. Murugan et al., “Understanding the effects of cardamom cultivation on its agroecosystem for sustainable production,” <i>Frontiers in Sustainable Food Systems</i>, vol. 6, 2022.</li>
+          <li>J. S. R. S. Seneviratne and W. M. G. S. Bandara, “Forecasting Agricultural Commodity Prices in Sri Lanka Using Time Series Models.”</li>
+          <li>P. Perera and D. Hemachandra, “The Impact of Currency Fluctuations on Agricultural Export Commodity Prices in Sri Lanka.”</li>
+          <li>R. M. Rathnayake, “Value Addition and Processing Cost Analysis in the Spice Sector of Sri Lanka.”</li>
+          <li>A. S. Ahmar et al., “Modeling and Forecasting Agricultural Commodity Prices Using Machine Learning.”</li>
+          <li>Sri Lanka Export Development Board, “Spices and Allied Products Sector – Industry Capability Report,” Colombo, 2019.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="sub">
+      <div class="sub-head"><h3>Research gap</h3><span class="label">What is missing, and how Cardamo responds</span></div>
+      <div class="gap-table" role="table" aria-label="Research gaps">
+        <div class="gap-row head" role="row"><span class="label" role="columnheader">Gap</span><span class="label" role="columnheader">In existing work</span><span class="label" role="columnheader">Cardamo's response</span></div>
+        <div class="gap-row" role="row">
+          <h4 role="cell">Cardamom-specific models</h4>
+          <p role="cell">Disease models are trained on other crops or on controlled images. Cardamom leaf and pod data are scarce.</p>
+          <p class="answer" role="cell">Dedicated cardamom datasets (1,724 leaf and 2,753 pod images) with transfer learning, augmentation and class weighting.</p>
+        </div>
+        <div class="gap-row" role="row">
+          <h4 role="cell">From diagnosis to care</h4>
+          <p role="cell">Detection ends at a class label. The farmer still has to work out what to do.</p>
+          <p class="answer" role="cell">Each pod diagnosis returns a risk level, a farmer action and organic management options.</p>
+        </div>
+        <div class="gap-row" role="row">
+          <h4 role="cell">Consistent, phone-ready grading</h4>
+          <p role="cell">Manual grading varies between graders. Automated grading often needs special hardware.</p>
+          <p class="answer" role="cell">A MobileNetV2 grader that works from an ordinary photo, exports to TensorFlow Lite and issues a quality certificate.</p>
+        </div>
+        <div class="gap-row" role="row">
+          <h4 role="cell">Forecasts tied to farm economics</h4>
+          <p role="cell">Price forecasts ignore the conversion ratio, drying, storage and quality-loss costs of drying a harvest.</p>
+          <p class="answer" role="cell">A four-week dried-price forecast feeds a profit rule that says sell fresh, hold, or dry and store.</p>
+        </div>
+        <div class="gap-row" role="row">
+          <h4 role="cell">Trust and safe inputs</h4>
+          <p role="cell">Black-box predictions, and closed-set classifiers that will label any photo they are given.</p>
+          <p class="answer" role="cell">Confidence thresholds, Grad-CAM heatmaps for leaves, and rejection of photos that are not cardamom.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <div class="problem">
+        <div class="problem-text">
+          <p class="label">Research problem</p>
+          <blockquote>How can machine learning give Sri Lankan cardamom farmers reliable, explainable support for crop health, harvest quality and selling decisions, in one platform that works from a phone?</blockquote>
+          <p>Each component answers one part of this question with its own dataset, model and evaluation, and all four are served through the same web and mobile application.</p>
+        </div>
+        <figure><img src="assets/img/field-canopy.webp" alt="Dense cardamom canopy with leaves showing yellowing and blight at the edges" loading="lazy" width="640" height="854"><figcaption>Plantation canopy observed during field visits.</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="sub">
+      <div class="sub-head"><h3>Objectives</h3></div>
+      <div class="objective-main">
+        <p class="label">Main objective</p>
+        <p>Design, build and evaluate Cardamo, a web and mobile cultivation management system that combines three image-based deep-learning models with a market forecasting model, each packaged for lightweight deployment and validated on independent test data.</p>
+      </div>
+      <div class="objectives">
+        <a class="obj" href="#c-leaf">
+          <span class="label">Specific objective 1</span>
+          <h4>Leaf disease detection</h4>
+          <p>Classify cardamom leaf photos as Healthy, Leaf Blight or Phyllosticta Leaf Spot with EfficientNetB0, and show the evidence behind each prediction with Grad-CAM.</p>
+          <span class="who">K. J. M. D. Imasha</span>
+        </a>
+        <a class="obj" href="#c-pod">
+          <span class="label">Specific objective 2</span>
+          <h4>Pod disease detection</h4>
+          <p>Tell capsule borer damage from cardamom thrips damage on pod photos, and turn each diagnosis into practical care guidance.</p>
+          <span class="who">Dissanayake K.S.S.</span>
+        </a>
+        <a class="obj" href="#c-grade">
+          <span class="label">Specific objective 3</span>
+          <h4>Pod quality grading</h4>
+          <p>Grade harvested pods as Grade A, B or C with at least 90% test accuracy, with confidence-aware results and a quality certificate.</p>
+          <span class="who">Kulasooriya K.S.D</span>
+        </a>
+        <a class="obj" href="#c-market">
+          <span class="label">Specific objective 4</span>
+          <h4>Market intelligence</h4>
+          <p>Forecast the dried-cardamom price four weeks ahead and recommend whether to sell fresh, hold, or dry and store.</p>
+          <span class="who">D. I. Delpechitra</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOLUTION ================= -->
+<section class="section" id="solution">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="label">Our solution</p>
+      <h2>One app, four AI services</h2>
+      <p>Farmers use the Cardamo web or mobile app. A shared FastAPI backend checks each upload, screens out photos that are not a cardamom leaf or pod, and sends the request to the right model. All three image models were exported to TensorFlow Lite for lightweight deployment.</p>
+    </div>
+
+    <div class="arch-wrap">
+      <div class="arch" aria-label="System overview diagram">
+        <span class="label colhead" style="grid-column:1">Farmer input</span>
+        <span class="label colhead" style="grid-column:3">Platform</span>
+        <span class="label colhead" style="grid-column:5">Model</span>
+        <span class="label colhead" style="grid-column:7">What the farmer gets</span>
+
+        <div class="hub">
+          <b>Cardamo app</b>
+          <ul>
+            <li>Web and mobile clients</li>
+            <li>FastAPI prediction service</li>
+            <li>Input validation and non-cardamom rejection</li>
+            <li>Confidence checks</li>
+            <li>User accounts and credits</li>
+          </ul>
+        </div>
+
+        <div class="node in" style="grid-column:1;grid-row:2"><b>Leaf photo</b><small>Camera or gallery</small></div>
+        <span class="arrow" style="grid-column:2;grid-row:2">→</span>
+        <span class="arrow" style="grid-column:4;grid-row:2">→</span>
+        <div class="node model" style="grid-column:5;grid-row:2"><b>Leaf disease</b><span class="mono">EfficientNetB0 + Grad-CAM</span></div>
+        <span class="arrow" style="grid-column:6;grid-row:2">→</span>
+        <div class="node out" style="grid-column:7;grid-row:2"><b>Diagnosis</b><small>Class probabilities and recommendation</small></div>
+
+        <div class="node in" style="grid-column:1;grid-row:3"><b>Pod photo</b><small>On the plant</small></div>
+        <span class="arrow" style="grid-column:2;grid-row:3">→</span>
+        <span class="arrow" style="grid-column:4;grid-row:3">→</span>
+        <div class="node model" style="grid-column:5;grid-row:3"><b>Pod disease</b><span class="mono">EfficientNetB0</span></div>
+        <span class="arrow" style="grid-column:6;grid-row:3">→</span>
+        <div class="node out" style="grid-column:7;grid-row:3"><b>Care plan</b><small>Risk level, action, organic options</small></div>
+
+        <div class="node in" style="grid-column:1;grid-row:4"><b>Harvested pod</b><small>On a light background</small></div>
+        <span class="arrow" style="grid-column:2;grid-row:4">→</span>
+        <span class="arrow" style="grid-column:4;grid-row:4">→</span>
+        <div class="node model" style="grid-column:5;grid-row:4"><b>Quality grading</b><span class="mono">OpenCV crop + MobileNetV2</span></div>
+        <span class="arrow" style="grid-column:6;grid-row:4">→</span>
+        <div class="node out" style="grid-column:7;grid-row:4"><b>Quality certificate</b><small>Grade A, B or C with confidence</small></div>
+
+        <div class="node in" style="grid-column:1;grid-row:5"><b>Harvest details</b><small>Region, grade, quantity, costs</small></div>
+        <span class="arrow" style="grid-column:2;grid-row:5">→</span>
+        <span class="arrow" style="grid-column:4;grid-row:5">→</span>
+        <div class="node model" style="grid-column:5;grid-row:5"><b>Market intelligence</b><span class="mono">Ridge forecast + profit rule</span></div>
+        <span class="arrow" style="grid-column:6;grid-row:5">→</span>
+        <div class="node out" style="grid-column:7;grid-row:5"><b>Sell-or-dry advice</b><small>Sell fresh, hold, or dry and store</small></div>
+      </div>
+      <p class="arch-note">Figure 1. System overview of the Cardamo platform.</p>
+    </div>
+
+    <div class="sheets">
+
+      <!-- Leaf -->
+      <article class="sheet" id="c-leaf">
+        <div class="sheet-strip"><span class="label">Component 1 · Leaf disease detection</span><span class="label">IT22097460</span></div>
+        <div class="sheet-body">
+          <div>
+            <div class="sheet-head">
+              <h3>Explainable leaf disease classification</h3>
+              <p class="rq">Can a transfer-learning model tell healthy cardamom leaves from leaf blight and Phyllosticta leaf spot, and show why it decided?</p>
+              <div class="owner"><span class="avatar" data-name="K. J. M. D. Imasha"></span><span>K. J. M. D. Imasha</span></div>
+            </div>
+            <ul class="chips" aria-label="Classes"><li>Healthy</li><li>Leaf Blight</li><li>Phyllosticta Leaf Spot</li></ul>
+            <ol class="steps">
+              <li>Resize leaf images to 224 × 224 and augment them with flips, small rotations, zoom and contrast changes.</li>
+              <li>Weight the loss to offset the smaller Leaf Blight class (weight 2.051 against 0.736 for Healthy).</li>
+              <li>Train an ImageNet-pretrained EfficientNetB0 head with the backbone frozen, then fine-tune about the last 30 layers at a lower learning rate.</li>
+              <li>Generate Grad-CAM heatmaps to check that the model looks at lesions, not background.</li>
+              <li>Export to TensorFlow Lite and serve through the web and mobile apps, rejecting non-cardamom leaves.</li>
+            </ol>
+            <div class="split-block">
+              <span class="label">Dataset · 1,724 images</span>
+              <div class="split" role="img" aria-label="1,206 training, 259 validation and 259 test images"><span class="tr" style="flex:1206"></span><span class="va" style="flex:259"></span><span class="te" style="flex:259"></span></div>
+              <div class="split-legend num"><span><i style="background:var(--pod)"></i>Train 1,206</span><span><i style="background:color-mix(in srgb,var(--pod) 55%,var(--surface))"></i>Validation 259</span><span><i style="background:var(--husk)"></i>Test 259</span></div>
+            </div>
+          </div>
+          <div class="evidence">
+            <div class="headline"><b>87.76%</b><span>accuracy on 259 independent test images, weighted F1 87.72%</span></div>
+            <div class="table-scroll">
+              <table class="metrics">
+                <thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th class="barcell"><span class="sr">F1 bar</span></th></tr></thead>
+                <tbody>
+                  <tr><td>Healthy</td><td>87.94</td><td>88.22</td><td>88.08</td><td class="barcell"><div class="bar"><i style="width:88.08%"></i></div></td></tr>
+                  <tr><td>Leaf Blight</td><td>86.11</td><td>83.33</td><td>84.71</td><td class="barcell"><div class="bar"><i style="width:84.71%"></i></div></td></tr>
+                  <tr><td>Phyllosticta</td><td>90.00</td><td>87.88</td><td>88.92</td><td class="barcell"><div class="bar"><i style="width:88.92%"></i></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="shots">
+              <figure class="crop"><img src="assets/img/leaf-spots.webp" alt="Cardamom leaf with spotting lesions" loading="lazy" width="600" height="801"><figcaption>Leaf lesions photographed in the field.</figcaption></figure>
+              <figure class="phone"><img src="assets/img/leaf-app.webp" alt="Cardamo mobile Leaf Analysis screen diagnosing Leaf Blight with 97.5% confidence" loading="lazy" width="520" height="1127"><figcaption>Mobile result: Leaf Blight with its confidence breakdown.</figcaption></figure>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Pod disease -->
+      <article class="sheet" id="c-pod">
+        <div class="sheet-strip"><span class="label">Component 2 · Pod disease detection</span><span class="label">IT22223180</span></div>
+        <div class="sheet-body">
+          <div>
+            <div class="sheet-head">
+              <h3>Pod disease detection and caring support</h3>
+              <p class="rq">Can a lightweight classifier separate capsule borer from cardamom thrips damage, and hand the farmer a care plan with the result?</p>
+              <div class="owner"><span class="avatar" data-name="Dissanayake K.S.S."></span><span>Dissanayake K.S.S.</span></div>
+            </div>
+            <ul class="chips" aria-label="Classes"><li>capsule_borer</li><li>cardamom_thrips</li></ul>
+            <ol class="steps">
+              <li>Load 224 × 224 pod images in batches of 32 with flip, rotation, zoom and contrast augmentation.</li>
+              <li>Train a new Global Average Pooling, Dropout (0.35) and two-class Softmax head on a frozen EfficientNetB0 for 15 epochs.</li>
+              <li>Fine-tune about the last 30 backbone layers with a lower learning rate and keep the best checkpoint.</li>
+              <li>Convert to Float32 TensorFlow Lite and confirm it returns the same probabilities as the Keras model.</li>
+              <li>Attach issue, risk level, farmer action and organic options to every prediction, and reject photos that are not pods.</li>
+            </ol>
+            <div class="split-block">
+              <span class="label">Dataset · 2,753 images</span>
+              <div class="split" role="img" aria-label="1,926 training, 412 validation and 415 test images"><span class="tr" style="flex:1926"></span><span class="va" style="flex:412"></span><span class="te" style="flex:415"></span></div>
+              <div class="split-legend num"><span><i style="background:var(--pod)"></i>Train 1,926</span><span><i style="background:color-mix(in srgb,var(--pod) 55%,var(--surface))"></i>Validation 412</span><span><i style="background:var(--husk)"></i>Test 415</span></div>
+            </div>
+          </div>
+          <div class="evidence">
+            <div class="headline"><b>98.80%</b><span>accuracy on 415 independent test images, with 5 errors in total</span></div>
+            <div>
+              <span class="label" style="display:block;margin-bottom:10px">Test confusion matrix</span>
+              <div class="cm" role="table" aria-label="Confusion matrix">
+                <div class="h"></div><div class="h">Predicted borer</div><div class="h">Predicted thrips</div>
+                <div class="h row">Capsule borer</div><div class="hit">195</div><div class="miss">4</div>
+                <div class="h row">Thrips</div><div class="miss">1</div><div class="hit">215</div>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="metrics">
+                <thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th class="barcell"></th></tr></thead>
+                <tbody>
+                  <tr><td>capsule_borer</td><td>0.99</td><td>0.98</td><td>0.99</td><td class="barcell"><div class="bar"><i style="width:99%"></i></div></td></tr>
+                  <tr><td>cardamom_thrips</td><td>0.98</td><td>1.00</td><td>0.99</td><td class="barcell"><div class="bar"><i style="width:99%"></i></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <span class="label" style="display:block;margin-bottom:10px">API response excerpt</span>
+<pre class="json"><span class="k">"recommendation"</span>: {
+  <span class="k">"issue"</span>: <span class="s">"Cardamom Thrips damage detected"</span>,
+  <span class="k">"risk_level"</span>: <span class="s">"Medium"</span>,
+  <span class="k">"farmer_action"</span>: <span class="s">"Inspect nearby pods and leaves for spreading
+    silvery scars, brown patches, or deformed capsules..."</span>,
+  <span class="k">"organic_solutions"</span>: [
+    <span class="s">"Spray neem oil (5 ml per litre of water) on panicles
+     and young leaves every 7–10 days."</span>,
+    <span class="s">"Install blue or yellow sticky traps between plant rows..."</span>
+  ],
+  <span class="k">"note"</span>: <span class="s">"Thrips multiply rapidly in hot, dry conditions."</span>
+}</pre>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Grading -->
+      <article class="sheet" id="c-grade">
+        <div class="sheet-strip"><span class="label">Component 3 · Pod quality grading</span><span class="label">IT22158840</span></div>
+        <div class="sheet-body">
+          <div>
+            <div class="sheet-head">
+              <h3>AI-based pod quality grading</h3>
+              <p class="rq">Can a lightweight image classifier grade cardamom pods into practical quality classes, flag uncertain photos and run inside a mobile-ready app?</p>
+              <div class="owner"><span class="avatar" data-name="Kulasooriya K.S.D"></span><span>Kulasooriya K.S.D</span></div>
+            </div>
+            <ol class="steps">
+              <li>Find the pod against the light background with OpenCV contours, crop it, pad it and place it on a square white canvas (zero crop failures).</li>
+              <li>Augment with flips, rotation, zoom, contrast and brightness changes, and weight classes by their training counts.</li>
+              <li>Train a MobileNetV2 head with the backbone frozen, then fine-tune about the last 35 layers at a lower learning rate.</li>
+              <li>Show a grade only when the top probability is at least 0.70; otherwise ask the farmer to retake the photo.</li>
+              <li>Export as SavedModel and TensorFlow Lite, and present the result as a quality certificate.</li>
+            </ol>
+            <div class="grades" aria-label="Grade interpretation">
+              <div><b>Grade A</b><span class="code">LG</span><span>Lanka Green. Even bright green, large, well filled. Premium export.</span></div>
+              <div><b>Grade B</b><span class="code">LLG1</span><span>Lanka Light Green 1. Minor variation and marks. Standard export.</span></div>
+              <div><b>Grade C</b><span class="code">LLG2</span><span>Lanka Light Green 2. Pale or uneven, visible marks. Domestic market.</span></div>
+            </div>
+            <div class="split-block" style="margin-top:22px">
+              <span class="label">Dataset · 2,890 images</span>
+              <div class="split" role="img" aria-label="2,022 training, 433 validation and 435 test images"><span class="tr" style="flex:2022"></span><span class="va" style="flex:433"></span><span class="te" style="flex:435"></span></div>
+              <div class="split-legend num"><span><i style="background:var(--pod)"></i>Train 2,022</span><span><i style="background:color-mix(in srgb,var(--pod) 55%,var(--surface))"></i>Validation 433</span><span><i style="background:var(--husk)"></i>Test 435</span></div>
+            </div>
+          </div>
+          <div class="evidence">
+            <div class="headline"><b>91.03%</b><span>accuracy on 435 independent test images, above the 90% target</span></div>
+            <div class="table-scroll">
+              <table class="metrics">
+                <thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th class="barcell"></th></tr></thead>
+                <tbody>
+                  <tr><td>Grade A</td><td>0.87</td><td>0.92</td><td>0.89</td><td class="barcell"><div class="bar"><i style="width:89%"></i></div></td></tr>
+                  <tr><td>Grade B</td><td>0.92</td><td>0.99</td><td>0.95</td><td class="barcell"><div class="bar"><i style="width:95%"></i></div></td></tr>
+                  <tr><td>Grade C</td><td>0.94</td><td>0.84</td><td>0.89</td><td class="barcell"><div class="bar"><i style="width:89%"></i></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="shots wide">
+              <figure><img src="assets/img/grade-certificate.webp" alt="Cardamo web quality certificate showing Cardamom Grade A with standard code LG" loading="lazy" width="1300" height="668"><figcaption>Web quality certificate for a Grade A pod.</figcaption></figure>
+              <figure><img src="assets/img/grade-capture.webp" alt="A single cardamom pod photographed on white paper, with dried pods around it on a table" loading="lazy" width="900" height="506"><figcaption>Capture setup: one pod on a plain light background.</figcaption></figure>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Market -->
+      <article class="sheet" id="c-market">
+        <div class="sheet-strip"><span class="label">Component 4 · Market intelligence</span><span class="label">IT22228758</span></div>
+        <div class="sheet-body">
+          <div>
+            <div class="sheet-head">
+              <h3>Market prediction and profit optimisation</h3>
+              <p class="rq">Can a four-week price forecast be turned into a clear, auditable answer to the farmer's question: sell fresh now, or dry and store?</p>
+              <div class="owner"><span class="avatar" data-name="D. I. Delpechitra"></span><span>D. I. Delpechitra</span></div>
+            </div>
+            <ol class="steps">
+              <li>Build 77 features from weekly prices across six regions and four grades: lags, rolling statistics, season and estimated economic variables.</li>
+              <li>Split the weeks in time order: train 2018-01-01 to 2023-10-09, validate to 2024-12-30, test 2025-01-06 to 2026-03-23.</li>
+              <li>Compare six regressors and a baseline on the validation period, then retrain the best on train plus validation.</li>
+              <li>Estimate fresh revenue against dried net profit after conversion ratio, drying, storage and quality-loss costs.</li>
+              <li>Serve the forecast and recommendation through FastAPI to the web and mobile apps.</li>
+            </ol>
+            <div class="rule">
+              <span class="label rule-label">Recommendation rule</span>
+              <p>Threshold = the larger of 8% of fresh revenue or LKR 3,000. Dried profit above fresh revenue by more than the threshold gives <code>DRY_AND_STORE</code>; below by more than it gives <code>SELL_FRESH</code>; anything in between gives <code>HOLD_MONITOR</code>.</p>
+            </div>
+          </div>
+          <div class="evidence">
+            <div class="headline"><b>5.15%</b><span>mean absolute percentage error on the 2025–26 test period (R² 0.9028)</span></div>
+            <div class="tiles">
+              <div class="tile"><b>684.87</b><span>MAE, LKR/kg</span></div>
+              <div class="tile"><b>853.17</b><span>RMSE, LKR/kg</span></div>
+              <div class="tile"><b>0.9028</b><span>R²</span></div>
+              <div class="tile"><b>89.44%</b><span>advice matched over 20,640 scenarios</span></div>
+            </div>
+            <div>
+              <span class="label" style="display:block;margin-bottom:12px">Validation MAPE by model (lower is better)</span>
+              <div class="hbars" role="table" aria-label="Validation MAPE by model">
+                <div class="best"><em>Ridge Regression</em><div class="bar"><i style="width:14.83%"></i></div><span>8.90%</span></div>
+                <div><em>Random Forest</em><div class="bar"><i style="width:34.05%"></i></div><span>20.43%</span></div>
+                <div><em>Hist. Gradient Boosting</em><div class="bar"><i style="width:34.25%"></i></div><span>20.55%</span></div>
+                <div><em>Gradient Boosting</em><div class="bar"><i style="width:34.48%"></i></div><span>20.69%</span></div>
+                <div><em>Extra Trees</em><div class="bar"><i style="width:34.80%"></i></div><span>20.88%</span></div>
+                <div><em>XGBoost</em><div class="bar"><i style="width:35.37%"></i></div><span>21.22%</span></div>
+                <div><em>Mean baseline</em><div class="bar"><i style="width:92.17%"></i></div><span>55.30%</span></div>
+                <div class="axis"><span></span><p><span>0%</span><span>30%</span><span>60%</span></p><span></span></div>
+              </div>
+            </div>
+            <div class="shots wide">
+              <figure><img src="assets/img/market-web.webp" alt="Cardamo Market Intelligence web page with Price Forecasting and Profit Optimiser panels" loading="lazy" width="1279" height="751"><figcaption>Market Intelligence page: four-week forecast and profit optimiser.</figcaption></figure>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <aside class="endorse" aria-label="External evaluation">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="19" r="12"/><path d="M18 19l4 4 8-8"/><path d="M16 29l-4 14 12-6 12 6-4-14"/></svg>
+      <div>
+        <p class="label">External evaluation</p>
+        <p>In a letter dated 3 August 2026, external supervisor S. Seneviratne evaluated the four functions of the Cardamom Farmer Support System. The letter states that the system's disease-management methods and treatment recommendations were reviewed and approved by the Department of Agriculture, with attention to responsible treatment and environmental sustainability.</p>
+      </div>
+    </aside>
+
+    <div class="sub">
+      <div class="sub-head"><h3>Technologies used</h3><span class="label">Which component used what</span></div>
+      <div class="tech-scroll">
+        <table class="tech">
+          <thead><tr><th>Technology</th><th>Role in Cardamo</th><th class="c">Leaf</th><th class="c">Pod disease</th><th class="c">Grading</th><th class="c">Market</th></tr></thead>
+          <tbody id="tech-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MILESTONES ================= -->
+<section class="section" id="milestones">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="label">Our milestones</p>
+      <h2>2026 research timeline</h2>
+      <p>Deadlines for the 2026 regular batch, from the proposal in March to publication evidence in December.</p>
+    </div>
+    <ol class="timeline" id="timeline"></ol>
+    <p class="tl-note" id="tl-note"></p>
+  </div>
+</section>
+
+<!-- ================= DOCUMENTS ================= -->
+<section class="section" id="documents">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="label">Documents and presentations</p>
+      <h2>Project deliverables</h2>
+      <p>Submitted reports, slides and records for each milestone.</p>
+    </div>
+    <div class="docs" id="docs"></div>
+  </div>
+</section>
+
+<!-- ================= TEAM ================= -->
+<section class="section" id="team">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="label">Meet our team</p>
+      <h2>The people behind Cardamo</h2>
+      <p>B.Sc. (Hons) in Information Technology, Department of Information Technology, Sri Lanka Institute of Information Technology.</p>
+    </div>
+    <div class="team-group">
+      <span class="label">Supervision</span>
+      <div class="people sup" id="supervisors"></div>
+    </div>
+    <div class="team-group">
+      <span class="label">Research team</span>
+      <div class="people" id="members"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="label">Contact us</p>
+      <h2>Get in touch</h2>
+      <p>Questions about the research, the dataset or a field trial? Send the team a message.</p>
+    </div>
+    <div class="contact">
+      <form id="contact-form" novalidate>
+        <div class="field"><label for="cf-name">Name</label><input id="cf-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="cf-email">Email address</label><input id="cf-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="cf-msg">Message or query</label><textarea id="cf-msg" name="message" required></textarea></div>
+        <button class="btn btn-dark" type="submit">Send message</button>
+        <p class="form-status" id="form-status" role="status"></p>
+      </form>
+      <div class="contact-card">
+        <dl>
+          <div id="email-row"><dt>Email</dt><dd><span id="team-email"></span><button class="copy" type="button" id="copy-email">Copy</button></dd></div>
+          <div><dt>Research group</dt><dd>R26-IT-032 · Cardamo</dd></div>
+          <div><dt>Institution</dt><dd>Department of Information Technology<br>Sri Lanka Institute of Information Technology</dd></div>
+          <div><dt>Supervisor</dt><dd>Ms. Jenny Krishara</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="Back to top">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3c6.5 4.6 9.2 10 8 16-1 5-4.4 8.2-8 10-3.6-1.8-7-5-8-10-1.2-6 1.5-11.4 8-16z" fill="#8cc35a"/><path d="M16 6.5v20" stroke="#0a3828" stroke-width="1.6" stroke-linecap="round"/><path d="M16 12l-4-2.6M16 17l-4.6-2.8M16 12l4-2.6M16 17l4.6-2.8" stroke="#0a3828" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <b>Cardamo</b>
+    </a>
+    <span>Smart cardamom cultivation management system · SLIIT research group R26-IT-032</span>
+    <span>© 2026 Team Cardamo</span>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   EDIT HERE: links, photos and contact details.
+   - url: paste a Google Drive / OneDrive share link (leave '' to show "Not linked yet")
+   - photo: path to an image in the repo, e.g. 'assets/team/imasha.jpg' (leave '' for initials)
+   - linkedin: full profile URL (leave '' to hide)
+   ===================================================================== */
+const CONFIG = {
+  teamEmail: '',
+
+  documents: [
+    { title: 'Project Proposal',            kind: 'Report',    date: '15 Mar 2026',        url: '' },
+    { title: 'Proposal Presentation',       kind: 'Slides',    date: '16–18 Mar 2026',     url: '' },
+    { title: 'Check List',                  kind: 'Checklist', date: '13 May 2026',        url: '' },
+    { title: 'Progress Presentation 1',     kind: 'Slides',    date: '11–13 May 2026',     url: '' },
+    { title: 'Progress Presentation 2',     kind: 'Slides',    date: '31 Aug – 2 Sep 2026', url: '' },
+    { title: 'Draft Thesis',                kind: 'Report',    date: '11 Oct 2026',
+      links: [ { label: 'Leaf', url: '' }, { label: 'Pod disease', url: '' }, { label: 'Grading', url: '' }, { label: 'Market', url: '' } ] },
+    { title: 'Final Check List',            kind: 'Checklist', date: '14 Oct 2026',        url: '' },
+    { title: 'Final Presentation',          kind: 'Slides',    date: '19–21 Oct 2026',     url: '' },
+    { title: 'Logbook',                     kind: 'Record',    date: '19–21 Oct 2026',     url: '' },
+    { title: 'Research Paper',              kind: 'Paper',     date: '23 Oct 2026',        url: '' },
+    { title: 'Final Thesis',                kind: 'Report',    date: '28 Oct 2026',
+      links: [ { label: 'Leaf', url: '' }, { label: 'Pod disease', url: '' }, { label: 'Grading', url: '' }, { label: 'Market', url: '' } ] },
+    { title: 'Publication Evidence',        kind: 'Record',    date: '1 Dec 2026',         url: '' }
+  ],
+
+  supervisors: [
+    { role: 'Supervisor',          name: 'Ms. Jenny Krishara', org: 'Sri Lanka Institute of Information Technology', photo: '', linkedin: '' },
+    { role: 'Co-supervisor',       name: '',                    org: 'Sri Lanka Institute of Information Technology', photo: '', linkedin: '' },
+    { role: 'External supervisor', name: 'S. Seneviratne',      org: 'Evaluated the Cardamom Farmer Support System', photo: '', linkedin: '' }
+  ],
+
+  members: [
+    { name: 'K. J. M. D. Imasha',  id: 'IT22097460', component: 'Leaf disease detection',  focus: 'EfficientNetB0 classifier with Grad-CAM explainability', photo: '', linkedin: '' },
+    { name: 'Dissanayake K.S.S.',  id: 'IT22223180', component: 'Pod disease detection',   focus: 'Capsule borer and thrips detection with care recommendations', photo: '', linkedin: '' },
+    { name: 'Kulasooriya K.S.D',   id: 'IT22158840', component: 'Pod quality grading',     focus: 'MobileNetV2 grading with quality certificates', photo: '', linkedin: '' },
+    { name: 'D. I. Delpechitra',   id: 'IT22228758', component: 'Market intelligence',     focus: 'Four-week price forecast and profit optimisation', photo: '', linkedin: '' }
+  ]
+};
+
+/* Timeline: [title, start, end, display]. Dates are YYYY-MM-DD. */
+const MILESTONES = [
+  ['Proposal Submission',                         '2026-03-15', '2026-03-15', '15 Mar 2026'],
+  ['Proposal Presentation',                       '2026-03-16', '2026-03-18', '16–18 Mar 2026'],
+  ['Check List Submission',                       '2026-05-13', '2026-05-13', '13 May 2026'],
+  ['Progress Presentation 1',                     '2026-05-11', '2026-05-13', '11–13 May 2026'],
+  ['Progress Presentation 2',                     '2026-08-31', '2026-09-02', '31 Aug – 2 Sep 2026'],
+  ['Draft Thesis Submission',                     '2026-10-11', '2026-10-11', '11 Oct 2026'],
+  ['Website Submission',                          '2026-10-11', '2026-10-11', '11 Oct 2026'],
+  ['Final Check List Submission',                 '2026-10-14', '2026-10-14', '14 Oct 2026'],
+  ['Final Presentation and Viva',                 '2026-10-19', '2026-10-21', '19–21 Oct 2026'],
+  ['Website Evaluation & Logbook Submission',     '2026-10-19', '2026-10-21', '19–21 Oct 2026'],
+  ['Research Paper Submission',                   '2026-10-23', '2026-10-23', '23 Oct 2026'],
+  ['Final Thesis Submission',                     '2026-10-28', '2026-10-28', '28 Oct 2026'],
+  ['Research Paper Publication Evidence',         '2026-12-01', '2026-12-01', '1 Dec 2026']
+];
+
+const TECH = [
+  ['Python',            'Data preparation, model training and backend logic', [1,1,1,1]],
+  ['TensorFlow / Keras','Deep-learning model development and inference',       [1,1,1,0]],
+  ['EfficientNetB0',    'ImageNet-pretrained backbone for disease classification', [1,1,0,0]],
+  ['MobileNetV2',       'Lightweight ImageNet-pretrained backbone for grading', [0,0,1,0]],
+  ['OpenCV',            'Pod detection, contour extraction and cropping',      [0,0,1,0]],
+  ['Grad-CAM',          'Heatmaps that show which leaf regions drove a prediction', [1,0,0,0]],
+  ['scikit-learn',      'Evaluation reports; preprocessing pipelines and regressors', [1,1,1,1]],
+  ['XGBoost',           'Candidate gradient-boosted regressor',                [0,0,0,1]],
+  ['pandas / NumPy',    'Tabular and array processing',                        [1,1,1,1]],
+  ['TensorFlow Lite',   'Compact model format for mobile and edge deployment', [1,1,1,0]],
+  ['FastAPI',           'Prediction and recommendation API for the apps',      [1,1,1,1]],
+  ['Google Colab',      'GPU notebooks for model training',                    [1,1,1,0]],
+  ['Matplotlib',        'Training curves and diagnostic plots',                [1,1,0,1]],
+  ['joblib',            'Saving the final forecasting pipeline',               [0,0,0,1]],
+  ['Git / GitHub',      'Version control with a branch per component',         [1,1,1,1]]
+];
+
+(function () {
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const initials = name => { const t = name.replace(/^(Ms|Mr|Mrs|Dr|Prof)\.?\s+/i, '').split(/[\s.]+/).filter(Boolean); return (t[0][0] + (t.length > 1 ? t[t.length - 1][0] : '')).toUpperCase(); };
+
+  /* Avatars used in component sheets */
+  document.querySelectorAll('.avatar[data-name]').forEach(a => { a.textContent = initials(a.dataset.name); });
+
+  /* Tech matrix */
+  const tb = document.getElementById('tech-body');
+  tb.innerHTML = TECH.map(([t, role, use]) =>
+    `<tr><td>${esc(t)}</td><td class="role">${esc(role)}</td>${use.map(u =>
+      `<td class="c">${u ? '<span class="dot" title="Used"></span><span class="sr">Used</span>' : '<span class="dot no" aria-hidden="true"></span>'}</td>`).join('')}</tr>`).join('');
+
+  /* Timeline with live status */
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  const dayMs = 86400000;
+  let nextEnd = null;
+  MILESTONES.forEach(([, , e]) => { const end = parse(e); if (end >= today && (!nextEnd || end < nextEnd)) nextEnd = end; });
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = MILESTONES.map(([title, s, e, disp]) => {
+    const start = parse(s), end = parse(e);
+    let cls = '', state = 'Upcoming';
+    if (end < today) { cls = 'done'; state = 'Completed'; }
+    else if (start <= today && today <= end) { cls = 'next now'; state = 'In progress'; }
+    else if (nextEnd && end.getTime() === nextEnd.getTime()) {
+      const days = Math.round((start - today) / dayMs);
+      cls = 'next'; state = days === 0 ? 'Due today' : days === 1 ? 'Due tomorrow' : `Due in ${days} days`;
+    }
+    return `<li class="tl ${cls}"><time>${esc(disp)}</time><span class="mark" aria-hidden="true"></span><div><h4>${esc(title)}</h4></div><span class="state">${state}</span></li>`;
+  }).join('');
+  const done = MILESTONES.filter(([, , e]) => parse(e) < today).length;
+  document.getElementById('tl-note').textContent = `${done} of ${MILESTONES.length} milestones completed as of ${today.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
+
+  /* Documents */
+  document.getElementById('docs').innerHTML = CONFIG.documents.map(d => {
+    const links = (d.links || [{ label: d.kind === 'Slides' ? 'View slides' : 'View document', url: d.url }]).filter(l => l.url);
+    const body = links.length
+      ? `<div class="links">${links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}</div>`
+      : '<span class="pending">Not linked yet</span>';
+    return `<article class="doc"><div class="top"><span class="kind">${esc(d.kind)}</span><time>${esc(d.date)}</time></div><h4>${esc(d.title)}</h4>${body}</article>`;
+  }).join('');
+
+  /* Team */
+  const avatar = p => `<div class="avatar">${p.photo ? `<img src="${esc(p.photo)}" alt="${esc(p.name)}" loading="lazy">` : esc(initials(p.name))}</div>`;
+  const li = p => p.linkedin ? `<a class="li" href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : '';
+  document.getElementById('supervisors').innerHTML = CONFIG.supervisors.filter(p => p.name).map(p =>
+    `<article class="person">${avatar(p)}<span class="role">${esc(p.role)}</span><h4>${esc(p.name)}</h4><p>${esc(p.org)}</p>${li(p)}</article>`).join('');
+  document.getElementById('members').innerHTML = CONFIG.members.map(p =>
+    `<article class="person">${avatar(p)}<span class="role">${esc(p.component)}</span><h4>${esc(p.name)}</h4><p class="mono" style="font-size:.8rem">${esc(p.id)}</p><p>${esc(p.focus)}</p>${li(p)}</article>`).join('');
+
+  /* Contact */
+  const emailRow = document.getElementById('email-row');
+  if (CONFIG.teamEmail) document.getElementById('team-email').textContent = CONFIG.teamEmail;
+  else emailRow.hidden = true;
+  document.getElementById('copy-email').addEventListener('click', e => {
+    const btn = e.currentTarget, text = CONFIG.teamEmail;
+    const done = () => { btn.textContent = 'Copied'; setTimeout(() => (btn.textContent = 'Copy'), 1600); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => selectEmail());
+    else selectEmail();
+    function selectEmail() { const r = document.createRange(); r.selectNodeContents(document.getElementById('team-email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  });
+  document.getElementById('contact-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = e.currentTarget, status = document.getElementById('form-status');
+    const val = id => document.getElementById(id).value.trim();
+    const name = val('cf-name'), email = val('cf-email'), msg = val('cf-msg');
+    if (!name || !email || !msg) { status.textContent = 'Fill in your name, email address and message.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { status.textContent = 'Enter a valid email address, like name@example.com.'; return; }
+    if (!CONFIG.teamEmail) { status.textContent = 'The team inbox is not set up yet. Please check back soon.'; return; }
+    const href = `mailto:${CONFIG.teamEmail}?subject=${encodeURIComponent('Cardamo enquiry from ' + name)}&body=${encodeURIComponent(msg + '\n\n' + name + ' <' + email + '>')}`;
+    window.location.href = href;
+    status.textContent = `Your email app should open with this message to ${CONFIG.teamEmail}. If it doesn't, copy the address and email the team directly.`;
+  });
+
+  /* Active nav link */
+  const links = [...document.querySelectorAll('#nav-links a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting) { links.forEach(a => a.classList.remove('is-active')); const a = map.get(en.target.id); if (a) a.classList.add('is-active'); }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    map.forEach((a, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+  }
+})();
+</script>
+<style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
+</body>
+</html>
